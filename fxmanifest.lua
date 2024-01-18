@@ -3,7 +3,7 @@ use_experimental_fxv2_oal 'yes'
 game 'gta5'
 lua54 'yes'
 
-description 'nass_carplay'
+description 'carplay'
 author 'Nass#1411'
 version '1.1.0'
 
