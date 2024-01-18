@@ -1,6 +1,4 @@
------------------For support, scripts, and more----------------
---------------- https://discord.gg/fz655NHeDq  -------------
----------------------------------------------------------------
+
 local spawnedSounds = {}
 
 RegisterCommand('carplay', function()
