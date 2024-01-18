@@ -28,48 +28,48 @@ function vehicleEntered(veh)
             local currTime = Entity(veh).state.currTime
             if data ~= nil then
 
-                if exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
-                    exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+                if exports.xsound:soundExists("carplay_"..data.vehStr) then
+                    exports.xsound:Destroy("carplay_"..data.vehStr)
                 end
                 local volume = 1.0
                 local SavedVol = Entity(NetToVeh(data.veh)).state.volume
                 if SavedVol ~= nil then
                     volume = SavedVol
                 end
-                exports.xsound:PlayUrl("nass_carplay_"..data.vehStr, data.link, volume, false, {
+                exports.xsound:PlayUrl("carplay_"..data.vehStr, data.link, volume, false, {
                     onPlayStart = function(event)
                         table.insert(spawnedSounds, NetToVeh(data.veh))
                         SendNUIMessage({
                             event = "playbackStarted",
                             link = data.link,
-                            vol = exports.xsound:getVolume("nass_carplay_"..data.vehStr)
+                            vol = exports.xsound:getVolume("carplay_"..data.vehStr)
                         })
 
-                        exports.xsound:setTimeStamp("nass_carplay_"..data.vehStr, math.floor(currTime))
+                        exports.xsound:setTimeStamp("carplay_"..data.vehStr, math.floor(currTime))
                         if Entity(veh).state.isPaused then
-                            exports.xsound:Pause("nass_carplay_"..data.vehStr)
+                            exports.xsound:Pause("carplay_"..data.vehStr)
                             SendNUIMessage({
                                 event = "setPicPaused",
                             })
                         end
-                        local totalDurr = exports.xsound:getMaxDuration("nass_carplay_"..data.vehStr)
+                        local totalDurr = exports.xsound:getMaxDuration("carplay_"..data.vehStr)
                         CreateThread(function()
                             while true do
                                 Wait(999)
 
                                 if totalDurr == 0 then
-                                    totalDurr = exports.xsound:getMaxDuration("nass_carplay_"..data.vehStr)
+                                    totalDurr = exports.xsound:getMaxDuration("carplay_"..data.vehStr)
                                 end
 
-                                if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
+                                if not exports.xsound:soundExists("carplay_"..data.vehStr) then
                                     break
                                 end
 
-                                local currTime = exports.xsound:getTimeStamp("nass_carplay_"..data.vehStr)
+                                local currTime = exports.xsound:getTimeStamp("carplay_"..data.vehStr)
                                 Entity(NetToVeh(data.veh)).state:set('currTime', currTime, true)
 
                                 if currTime+1 == totalDurr then
-                                    TriggerEvent("nass_carplay:playsound", {event = "nextSong", veh =data.veh, vehStr = data.vehStr})
+                                    TriggerEvent("carplay:playsound", {event = "nextSong", veh =data.veh, vehStr = data.vehStr})
                                     shouldBreak = true
                                 end
 
@@ -80,7 +80,7 @@ function vehicleEntered(veh)
                 
                                 if GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
                                     SendNUIMessage({event = "resetPlayback"})
-                                    exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+                                    exports.xsound:Destroy("carplay_"..data.vehStr)
                                     shouldBreak = true
                                 end
                 
@@ -105,8 +105,8 @@ function vehicleEntered(veh)
     end
 end
 
-RegisterNetEvent('nass_carplay:playsound')
-AddEventHandler("nass_carplay:playsound", function(data)
+RegisterNetEvent('carplay:playsound')
+AddEventHandler("carplay:playsound", function(data)
     if data.event == "url" then
         if data.shouldForce then
             shouldBreak = true
@@ -114,7 +114,7 @@ AddEventHandler("nass_carplay:playsound", function(data)
             shouldBreak = false
         end
 
-        if not data.shouldForce and exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
+        if not data.shouldForce and exports.xsound:soundExists("carplay_"..data.vehStr) then
             local currQueue = Entity(NetToVeh(data.veh)).state.queue
             if currQueue == nil then 
                 currQueue = {}
@@ -138,41 +138,41 @@ AddEventHandler("nass_carplay:playsound", function(data)
                 Entity(NetToVeh(data.veh)).state:set('queue', queue, true)
             end
 
-            if exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
-                exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+            if exports.xsound:soundExists("carplay_"..data.vehStr) then
+                exports.xsound:Destroy("carplay_"..data.vehStr)
             end
             local volume = 1.0
             local SavedVol = Entity(NetToVeh(data.veh)).state.volume
             if SavedVol ~= nil then
                 volume = SavedVol
             end
-            exports.xsound:PlayUrl("nass_carplay_"..data.vehStr, data.link, volume, false, {
+            exports.xsound:PlayUrl("carplay_"..data.vehStr, data.link, volume, false, {
                 onPlayStart = function(event)
                     table.insert(spawnedSounds, NetToVeh(data.veh))
                     SendNUIMessage({
                         event = "playbackStarted",
                         link = data.link,
-                        vol = exports.xsound:getVolume("nass_carplay_"..data.vehStr)
+                        vol = exports.xsound:getVolume("carplay_"..data.vehStr)
                     })
 
-                    local totalDurr = exports.xsound:getMaxDuration("nass_carplay_"..data.vehStr)
+                    local totalDurr = exports.xsound:getMaxDuration("carplay_"..data.vehStr)
                     
                     CreateThread(function()
                         while true do
                             Wait(999)
                             if totalDurr == 0 then
-                                totalDurr = exports.xsound:getMaxDuration("nass_carplay_"..data.vehStr)
+                                totalDurr = exports.xsound:getMaxDuration("carplay_"..data.vehStr)
                             end
 
-                            if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
+                            if not exports.xsound:soundExists("carplay_"..data.vehStr) then
                                 break
                             end
 
-                            local currTime = exports.xsound:getTimeStamp("nass_carplay_"..data.vehStr)
+                            local currTime = exports.xsound:getTimeStamp("carplay_"..data.vehStr)
                             Entity(NetToVeh(data.veh)).state:set('currTime', currTime, true)
 
                             if currTime+1 == totalDurr then
-                                TriggerEvent("nass_carplay:playsound", {event = "nextSong", veh = data.veh, vehStr = data.vehStr})
+                                TriggerEvent("carplay:playsound", {event = "nextSong", veh = data.veh, vehStr = data.vehStr})
                                 shouldBreak = true
                             end
 
@@ -183,7 +183,7 @@ AddEventHandler("nass_carplay:playsound", function(data)
             
                             if GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
                                 SendNUIMessage({event = "resetPlayback"})
-                                exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+                                exports.xsound:Destroy("carplay_"..data.vehStr)
                                 shouldBreak = true
                             end
             
@@ -205,41 +205,41 @@ AddEventHandler("nass_carplay:playsound", function(data)
             }) 
         end  
     elseif data.event == "resume" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
 
-        exports.xsound:Resume("nass_carplay_"..data.vehStr)
+        exports.xsound:Resume("carplay_"..data.vehStr)
         Entity(NetToVeh(data.veh)).state:set('isPaused', false, true)
     elseif data.event == "pause" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
 
-        exports.xsound:Pause("nass_carplay_"..data.vehStr)
+        exports.xsound:Pause("carplay_"..data.vehStr)
         Entity(NetToVeh(data.veh)).state:set('isPaused', true, true)
     elseif data.event == "resetPlayback" then
-        exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+        exports.xsound:Destroy("carplay_"..data.vehStr)
     elseif data.event == "setVolume" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
 
         local newVol = math.floor(data.vol)/100
-        exports.xsound:setVolume("nass_carplay_"..data.vehStr, newVol)
+        exports.xsound:setVolume("carplay_"..data.vehStr, newVol)
         Entity(NetToVeh(data.veh)).state:set('volume', newVol, true)
     elseif data.event == "breakLoop" then
         shouldBreak = true
 	elseif data.event == "selectTime" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
 
-	    exports.xsound:setTimeStamp("nass_carplay_"..data.vehStr, math.floor(data.newTime))
+	    exports.xsound:setTimeStamp("carplay_"..data.vehStr, math.floor(data.newTime))
         Wait(50)
     elseif data.event == "restartSong" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
 
-        exports.xsound:setTimeStamp("nass_carplay_"..data.vehStr, math.floor(0))
+        exports.xsound:setTimeStamp("carplay_"..data.vehStr, math.floor(0))
     elseif data.event == "nextSong" then
-        if not exports.xsound:soundExists("nass_carplay_"..data.vehStr) then return end
+        if not exports.xsound:soundExists("carplay_"..data.vehStr) then return end
         local currQueue = Entity(NetToVeh(data.veh)).state.queue
         local currQueuePos = Entity(NetToVeh(data.veh)).state.queuePos
         if currQueuePos == nil then 
-            if exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
-                exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+            if exports.xsound:soundExists("carplay_"..data.vehStr) then
+                exports.xsound:Destroy("carplay_"..data.vehStr)
             end
             SendNUIMessage({
                 event = "updateTime",
@@ -253,13 +253,13 @@ AddEventHandler("nass_carplay:playsound", function(data)
         if dat ~= nil then
             dat.shouldForce = true
             Wait(1)
-            if exports.xsound:soundExists("nass_carplay_"..data.vehStr) then
-                exports.xsound:Destroy("nass_carplay_"..data.vehStr)
+            if exports.xsound:soundExists("carplay_"..data.vehStr) then
+                exports.xsound:Destroy("carplay_"..data.vehStr)
             end
             Wait(1)
 
             local peds = getPeds(NetToVeh(data.veh))
-            TriggerServerEvent("nass_carplay:syncmusic", peds, data.veh, dat)
+            TriggerServerEvent("carplay:syncmusic", peds, data.veh, dat)
         else
             SendNUIMessage({
                 event = "updateTime",
@@ -280,7 +280,7 @@ RegisterNUICallback('callback', function(data)
             Entity(NetToVeh(data.veh)).state:set('data', data, true)
         end
         local peds = getPeds(NetToVeh(data.veh))
-        TriggerServerEvent("nass_carplay:syncmusic", peds, data.veh, data)
+        TriggerServerEvent("carplay:syncmusic", peds, data.veh, data)
     end
 end)
 
@@ -316,8 +316,8 @@ AddEventHandler('onResourceStop', function(resourceName)
         Entity(v).state:set('queue', nil, true)
         Entity(v).state:set('queuePos', 1, true)
         Entity(v).state:set('isPaused', 1, false)
-        if exports.xsound:soundExists("nass_carplay_"..v) then
-            exports.xsound:Destroy("nass_carplay_"..v)
+        if exports.xsound:soundExists("carplay_"..v) then
+            exports.xsound:Destroy("carplay_"..v)
             print("Destorying")
         end
         
